@@ -23,13 +23,16 @@ function App() {
   const [playing, setPlaying] = useState(true);
   const [clicked, setClicked] = useState(false);
   const [menuPosition, setMenuPosition] = useState({x: 0, y: 0});
+  const [clickedPosition, setClickedPosition] = useState(null);
   function handleClick(e) {
-    console.log("x " + e.nativeEvent.offsetX);
-    console.log("y " + e.nativeEvent.offsetY);
-    let positionForMenu = {x: e.nativeEvent.offsetX-100, y: e.nativeEvent.offsetY+73};
+    setClickedPosition({x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY})
     setClicked(!clicked);
-    setMenuPosition(positionForMenu);
+    setMenuPosition({x: e.nativeEvent.offsetX-100, y: e.nativeEvent.offsetY+73});
   }
+
+  useEffect(() => {
+    console.log(clickedPosition);
+  }, [clickedPosition])
   return (
     <div className="flex flex-column">
       {playing ?
