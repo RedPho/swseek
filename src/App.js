@@ -24,18 +24,18 @@ function App() {
   const [clicked, setClicked] = useState(false);
   const [menuPosition, setMenuPosition] = useState({x: 0, y: 0});
   function handleClick(e) {
-    console.log(e.nativeEvent.offsetX);
-    console.log(e.nativeEvent.offsetY);
+    console.log("x " + e.nativeEvent.offsetX);
+    console.log("y " + e.nativeEvent.offsetY);
     let positionForMenu = {x: e.nativeEvent.offsetX-100, y: e.nativeEvent.offsetY+73};
     setClicked(!clicked);
     setMenuPosition(positionForMenu);
   }
   return (
-    <div className="">
+    <div className="flex flex-column">
       {playing ?
         <div>
           <Navbar />
-          <img onClick={handleClick} src={StarWars} ></img>
+          <img style={{minWidth: "1600px", minHeight: "2400px", maxWidth: "1000px", maxHeight: "1500px"}} className='' onClick={handleClick} src={StarWars} ></img>
         </div>
         
         :<Leaderboard />

@@ -1,7 +1,7 @@
 export default function Navbar() {
   return (
-    <div className="p-3 flex justify-center items-center bg-base-100 text-xs">
-      <div className="">
+    <div className="sticky top-0 p-3 flex justify-center items-center bg-base-100 text-s">
+      <div>
         <ul className="menu menu-horizontal px-1">
           <li tabIndex={0}>
             <h3 className="cursor-default">
@@ -28,6 +28,15 @@ export default function Navbar() {
             </h3>
             <ul className="p-2 bg-base-100">
               <li><img className="cursor-default" src="https://lumiere-a.akamaihd.net/v1/images/darth-vader-main_4560aff7.jpeg?region=0%2C67%2C1280%2C720" /></li>
+            </ul>
+          </li>
+          <li tabIndex={0}>
+            <h3 className="cursor-default">
+              <p id="darth">Darth Maul</p>
+              <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
+            </h3>
+            <ul className="p-2 bg-base-100">
+              <li><img className="cursor-default" src="https://lumiere-a.akamaihd.net/v1/images/Darth-Maul_632eb5af.jpeg?region=75%2C42%2C1525%2C858" /></li>
             </ul>
           </li>
         </ul>
