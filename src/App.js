@@ -50,7 +50,6 @@ function App() {
             }
         }
         else if (x == "maul") {
-          console.log("maulll")
           if (charCoordinates.maulXStart < clickedPosition.x && charCoordinates.maulXEnd > clickedPosition.x &&
             charCoordinates.maulYStart < clickedPosition.y && charCoordinates.maulYEnd > clickedPosition.y) {
               setMaulFound(true);
