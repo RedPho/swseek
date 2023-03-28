@@ -138,12 +138,6 @@ function App() {
     }
   }, [vaderFound])
 
-  useEffect(() => {
-    if(clickedPosition) {
-      console.log(clickedPosition);
-    }
-  }, [clickedPosition])
-
   return (
     <div className="flex flex-column">
       {playing ?
