@@ -2,10 +2,10 @@ export default function({ position }) {
   return (
     <div style={{top: `${position.y}px`, left: `${position.x}px`}} className={"absolute"}>
       <ul  className="menu menu-compact bg-base-100 w-40 p-2 rounded-box flex flex-column justify-center items-center">
-        <li><button>Master Yoda</button></li>
-        <li><button>Chewbacca</button></li>
-        <li><button>Darth Vader</button></li>
-        <li><button>Darth Maul</button></li>
+        <li><button id="yodaBtn">Master Yoda</button></li>
+        <li><button id="chewBtn">Chewbacca</button></li>
+        <li><button id="vaderBtn">Darth Vader</button></li>
+        <li><button id="maulBtn">Darth Maul</button></li>
       </ul>
     </div>
   )
