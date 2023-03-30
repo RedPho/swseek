@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/swseek/static/css/main.f2c4a98a.css",
+    "main.js": "/swseek/static/js/main.546f8236.js",
+    "static/media/star_wars_wimmelbilder.jpg": "/swseek/static/media/star_wars_wimmelbilder.665083d73107f7832604.jpg",
+    "index.html": "/swseek/index.html",
+    "main.f2c4a98a.css.map": "/swseek/static/css/main.f2c4a98a.css.map",
+    "main.546f8236.js.map": "/swseek/static/js/main.546f8236.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f2c4a98a.css",
+    "static/js/main.546f8236.js"
+  ]
+}
