@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import './App.css';
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs} from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "firebase/firestore";
 import Leaderboard from './components/Leaderboard';
 import StarWars from './assets/star_wars_wimmelbilder.jpg'
 import Navbar from './components/Navbar';
@@ -19,11 +18,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const coordinatesRef = collection(db, "coordinates");
+const highscoresRef = collection(db, "highscores");
 
 function App() {
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [menuPosition, setMenuPosition] = useState({x: 0, y: 0});
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [clickedPosition, setClickedPosition] = useState(null);
   const [yodaFound, setYodaFound] = useState(false);
   const [maulFound, setMaulFound] = useState(false);
@@ -32,11 +32,14 @@ function App() {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
+  const [highscores, setHighscores] = useState([]);
+  const [namePhase, setNamePhase] = useState(false);
+  const [name, setName] = useState("");
 
   function handleClick(e) {
-    setClickedPosition({x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY})
+    setClickedPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY })
     setClicked(!clicked);
-    setMenuPosition({x: e.nativeEvent.offsetX-100, y: e.nativeEvent.offsetY+73});
+    setMenuPosition({ x: e.nativeEvent.offsetX - 100, y: e.nativeEvent.offsetY + 73 });
   }
 
   async function checkCorrect(x) {
@@ -46,38 +49,52 @@ function App() {
         if (x == "yoda") {
           if (charCoordinates.yodaXStart < clickedPosition.x && charCoordinates.yodaXEnd > clickedPosition.x &&
             charCoordinates.yodaYStart < clickedPosition.y && charCoordinates.yodaYEnd > clickedPosition.y) {
-              setYodaFound(true);
-            }
+            setYodaFound(true);
+          }
         }
         else if (x == "maul") {
           if (charCoordinates.maulXStart < clickedPosition.x && charCoordinates.maulXEnd > clickedPosition.x &&
             charCoordinates.maulYStart < clickedPosition.y && charCoordinates.maulYEnd > clickedPosition.y) {
-              setMaulFound(true);
-            }
+            setMaulFound(true);
+          }
         }
         else if (x == "chew") {
           if (charCoordinates.chewXStart < clickedPosition.x && charCoordinates.chewXEnd > clickedPosition.x &&
             charCoordinates.chewYStart < clickedPosition.y && charCoordinates.chewYEnd > clickedPosition.y) {
-              setChewFound(true);
-            }
+            setChewFound(true);
+          }
         }
         else if (x == "vader") {
           if (charCoordinates.vaderXStart < clickedPosition.x && charCoordinates.vaderXEnd > clickedPosition.x &&
             charCoordinates.vaderYStart < clickedPosition.y && charCoordinates.vaderYEnd > clickedPosition.y) {
-              setVaderFound(true);
-            }
+            setVaderFound(true);
+          }
         }
       })
   }
+
+  async function getHighscores() {
+    let highscoresQuery = query(highscoresRef, orderBy("seconds"), limit(5));
+    let hs = await getDocs(highscoresQuery)
+    let newHighscores = [];
+    hs.forEach(doc => {
+      newHighscores.push(doc.data())
+    });
+    setHighscores(newHighscores);
+    console.log(newHighscores);
+  }
+  useEffect(() => {
+    getHighscores();
+  }, [])
 
   useEffect(() => {
     let timer = setInterval(() => {
       let newSeconds;
       let newMinutes;
-      if(seconds == 59) {
+      if (seconds == 59) {
         newMinutes = minutes + 1;
         newSeconds = 0;
-        if(minutes == 59) {
+        if (minutes == 59) {
           setHours(hours + 1);
           newMinutes = 0;
         }
@@ -90,65 +107,80 @@ function App() {
     }, 1000);
     if (yodaFound && maulFound && chewFound && vaderFound) {
       clearInterval(timer);
+      setNamePhase(true);
+      setPlaying(false);
     }
     return () => { clearInterval(timer) };
   }, [seconds])
 
-  useEffect(()=> {
+  useEffect(() => {
     let yodaBtn = document.getElementById("yodaBtn");
     let maulBtn = document.getElementById("maulBtn");
     let chewBtn = document.getElementById("chewBtn");
     let vaderBtn = document.getElementById("vaderBtn");
-    if(yodaBtn) {
+    if (yodaBtn) {
       yodaBtn.onclick = () => { checkCorrect("yoda") };
     }
-    if(maulBtn) {
+    if (maulBtn) {
       maulBtn.onclick = () => { checkCorrect("maul") };
     }
-    if(chewBtn) {
+    if (chewBtn) {
       chewBtn.onclick = () => { checkCorrect("chew") };
     }
-    if(vaderBtn) {
+    if (vaderBtn) {
       vaderBtn.onclick = () => { checkCorrect("vader") };
     }
   }, [clicked])
 
-  useEffect(() => {
-    if (yodaFound) {
-      alert("You Found Yoda!");
+  async function submitName() {
+    let sec = (hours * 3600) + (minutes * 60) + seconds;
+    if (name != "") {
+      await addDoc(collection(db, "highscores"), {
+        "name": name,
+        "seconds": sec
+      })
     }
-  }, [yodaFound])
 
-  useEffect(() => {
-    if (maulFound) {
-      alert("You Found Darth Maul!");
-    }
-  }, [maulFound])
+    getHighscores();
+    setNamePhase(false);
+  }
 
-  useEffect(() => {
-    if (chewFound) {
-      alert("You Found Chewbacca!");
-    }
-  }, [chewFound])
-
-  useEffect(() => {
-    if (vaderFound) {
-      alert("You Found Darth Vader!");
-    }
-  }, [vaderFound])
+  function playAgain() {
+    setClicked(false);
+    setYodaFound(false);
+    setMaulFound(false);
+    setChewFound(false);
+    setVaderFound(false);
+    setPlaying(true);
+    setSeconds(0);
+    setMinutes(0);
+    setHours(0);
+    setName("");
+  }
 
   return (
     <div className="flex flex-column">
-      {playing ?
+      {playing &&
         <div>
           <Navbar seconds={seconds} hours={hours} minutes={minutes} vaderFound={vaderFound} chewFound={chewFound} maulFound={maulFound} yodaFound={yodaFound} />
-          <img style={{minWidth: "1600px", minHeight: "2400px", maxWidth: "1000px", maxHeight: "1500px"}} className='' onClick={handleClick} src={StarWars} ></img>
+          <img style={{ minWidth: "1600px", minHeight: "2400px", maxWidth: "1000px", maxHeight: "1500px" }} className='' onClick={handleClick} src={StarWars} ></img>
         </div>
-        
-        :<Leaderboard />
       }
-      {clicked &&
-        <CharacterMenu position={menuPosition} />
+      {!playing && !namePhase &&
+        <Leaderboard handleClick={playAgain} highscores={highscores} />
+      }
+      {namePhase &&
+        <div className='flex flex-col items-center justify-center absolute self-start top-1/2 left-1/2 bottom-1/2 right-1/2 m-auto'>
+          <div className="card w-96 bg-primary text-primary-content">
+            <div className="card-body">
+              <h2 className="card-title">Congratulations, you found all of them in {(hours * 3600) + (minutes * 60) + seconds} seconds!</h2>
+              <input value={name} onChange={(e) => { setName(e.target.value); console.log(name) }} type="text" placeholder="Enter Your Name:" className="input input-bordered input-primary" /><button onClick={submitName} className='btn'>Submit</button>
+            </div>
+          </div>
+        </div>
+      }
+      {clicked && !namePhase &&
+        <CharacterMenu yodaFound={yodaFound} maulFound={maulFound} vaderFound={vaderFound} chewFound={chewFound} position={menuPosition} />
       }
     </div>
   );

@@ -8,7 +8,7 @@ export default function Navbar({ vaderFound, chewFound, yodaFound, maulFound, mi
           <span style={{ "--value": seconds }}></span>s
         </span>
         <ul className="menu menu-horizontal px-1">
-          <li><h3 className="cursor-default alert">Congratilations, you found all of them!</h3></li>
+          <li><h3 className="cursor-default alert">Congratulations, you found all of them!</h3></li>
         </ul>
       </div>
     )
