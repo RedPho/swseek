@@ -164,6 +164,7 @@ function App() {
         <div>
           <Navbar seconds={seconds} hours={hours} minutes={minutes} vaderFound={vaderFound} chewFound={chewFound} maulFound={maulFound} yodaFound={yodaFound} />
           <img style={{ minWidth: "1600px", minHeight: "2400px", maxWidth: "1000px", maxHeight: "1500px" }} className='' onClick={handleClick} src={StarWars} ></img>
+          <footer className='p-4 flex justify-center items-center'>Picture From <a className='link ml-1' target="_blank" rel="noopener noreferrer" href='https://www.reddit.com/r/wimmelbilder/comments/ulfl0m/wheres_darth_vader_artwork_by_gus_morais_oc/'>Gus Morais</a></footer>
         </div>
       }
       {!playing && !namePhase &&
