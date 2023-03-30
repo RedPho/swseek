@@ -1,4 +1,6 @@
+live: https://redpho.github.io/swseek/
 
+Where is Waldo like game made with React.js, TailwindCSS, DaisyUI on Front-End and used Firebase Firestore as backend.
 
 # Getting Started with Create React App
 
